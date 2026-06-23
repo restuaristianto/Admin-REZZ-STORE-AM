@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin REZZ STORE - Light Premium Panel V3</title>
+    <title>Admin REZZ STORE - Light Premium Panel V4</title>
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -192,14 +192,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* --- GRID LAYOUTS --- */
-        .page-grid {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
-            align-items: start;
-        }
-
         /* --- PREMIUM CARDS & STATS --- */
         .stats-grid {
             display: grid;
@@ -267,6 +259,7 @@
             border-radius: 24px;
             padding: 35px;
             box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
         }
 
         .card-title {
@@ -297,7 +290,7 @@
             margin-bottom: 10px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 16px;
             background: var(--bg-input);
@@ -309,7 +302,7 @@
             transition: all 0.25s ease;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: var(--accent);
             background: #fff;
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
@@ -405,6 +398,7 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
         }
 
         table {
@@ -478,6 +472,26 @@
             color: var(--text-muted);
         }
         .empty-state i { font-size: 2.5rem; margin-bottom: 10px; color: var(--border-glow); }
+
+        /* --- TWO COLUMN GRID FOR FOOTER INFO --- */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        .alert-text { font-size: 0.9rem; font-weight: 500; }
+        .alert-badge { background: var(--warning); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
 
         /* --- LIVE ACTIVITY LOG LIST --- */
         .log-list {
@@ -593,19 +607,17 @@
                 </div>
             </div>
 
-            <!-- RIWAYAT AKTIVITAS TERBARU (PENGGANTI EXPORT) -->
+            <!-- RIWAYAT AKTIVITAS TERBARU -->
             <div class="card">
                 <div class="card-title" style="margin-bottom: 18px;"><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);"></i> Riwayat Aktivitas Toko (Live)</div>
-                <div class="log-list" id="activity-log-container">
-                    <!-- Data log diisi oleh JS -->
-                </div>
+                <div class="log-list" id="activity-log-container"></div>
             </div>
         </div>
 
         <!-- TAMBAH DATA -->
         <div id="tambah-data" class="page-content">
             <header><div><h1>Tambah Pembelian</h1><p>Catat pesanan eceran dan membership finansial di sini.</p></div></header>
-            <div class="page-grid">
+            <div style="max-width: 800px;">
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-pen-to-square"></i> Input Transaksi Baru</div>
                     <form id="orderForm" onsubmit="simpanData(event)">
@@ -655,6 +667,7 @@
                 </div>
             </div>
 
+            <!-- TABEL PEMBELIAN -->
             <div class="table-card">
                 <table>
                     <thead>
@@ -669,6 +682,29 @@
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
+            </div>
+
+            <!-- SEKSI BARU DI BAWAH TABEL BIAR TIDAK KOSONG -->
+            <div class="footer-grid">
+                <!-- Peringatan Kuota Menipis -->
+                <div class="card" style="padding: 25px;">
+                    <div class="card-title" style="font-size: 1rem; margin-bottom: 15px; color: var(--warning);">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Perlu Perhatian / Kuota Menipis
+                    </div>
+                    <div id="alert-container">
+                        <!-- Diisi otomatis oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Catatan Internal Toko -->
+                <div class="card" style="padding: 25px;">
+                    <div class="card-title" style="font-size: 1rem; margin-bottom: 15px; color: var(--accent);">
+                        <i class="fa-solid fa-note-sticky"></i> Catatan Internal Admin (Auto-Save)
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <textarea id="admin-notes" rows="4" placeholder="Tulis catatan penting toko di sini.. oninput="saveNotes(this.value)"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -685,8 +721,8 @@
     </div>
 
     <script>
-        let database = JSON.parse(localStorage.getItem('rezz_store_db_v3')) || [];
-        let logs = JSON.parse(localStorage.getItem('rezz_store_logs_v3')) || [];
+        let database = JSON.parse(localStorage.getItem('rezz_store_db_v4')) || [];
+        let logs = JSON.parse(localStorage.getItem('rezz_store_logs_v4')) || [];
         let currentFilter = 'all';
         let searchQuery = '';
 
@@ -703,9 +739,9 @@
 
         function tambahLog(pesan, jenis) {
             const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-            logs.unshift({ pesan, waktu, jenis }); // Tambah ke atas
-            if (logs.length > 4) logs.pop(); // Batasi hanya 4 riwayat terakhir agar rapi
-            localStorage.setItem('rezz_store_logs_v3', JSON.stringify(logs));
+            logs.unshift({ pesan, waktu, jenis });
+            if (logs.length > 3) logs.pop(); // Batasi 3 riwayat utama biar presisi seimbang
+            localStorage.setItem('rezz_store_logs_v4', JSON.stringify(logs));
             renderLogs();
         }
 
@@ -738,6 +774,7 @@
             hitungUlangStatistik();
             updateTableUI();
             renderLogs();
+            renderAlerts();
         }
 
         function toggleFormInput() {
@@ -790,6 +827,7 @@
                     showToast("Kuota dikurangi 1");
                 }
                 saveToStorage();
+                renderAlerts();
             }
         }
 
@@ -800,6 +838,7 @@
                 tambahLog(`Kuota video pelanggan <b>${database[index].pembeli}</b> ditambah 1`, 'update');
                 showToast("Kuota ditambah 1");
                 saveToStorage();
+                renderAlerts();
             }
         }
 
@@ -810,11 +849,12 @@
                 database = database.filter(i => i.id !== id);
                 saveToStorage();
                 showToast("Data dihapus!");
+                renderAlerts();
             }
         }
 
         function saveToStorage() {
-            localStorage.setItem('rezz_store_db_v3', JSON.stringify(database));
+            localStorage.setItem('rezz_store_db_v4', JSON.stringify(database));
             hitungUlangStatistik();
             updateTableUI();
         }
@@ -884,6 +924,37 @@
             });
         }
 
+        // FUNGSI BARU: RENDER SISTEM NOTIFIKASI KUOTA MENIPIS
+        function renderAlerts() {
+            const container = document.getElementById('alert-container');
+            if(!container) return;
+            
+            // Filter pembeli yang kuotanya <= 2
+            let lowStockUsers = database.filter(item => item.qty <= 2);
+
+            if(lowStockUsers.length === 0) {
+                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding: 15px 0; text-align:center;">Aman! Semua kuota video pembeli masih mencukupi.</p>`;
+                return;
+            }
+
+            container.innerHTML = lowStockUsers.map(item => `
+                <div class="alert-item">
+                    <span class="alert-text">Kuota <b>${item.pembeli}</b> menipis!</span>
+                    <span class="alert-badge">Sisa ${item.qty} Video</span>
+                </div>
+            `).join('');
+        }
+
+        // FUNGSI BARU: MEMO INTERNAL ADMIN
+        function saveNotes(text) {
+            localStorage.setItem('rezz_store_notes', text);
+        }
+        function loadNotes() {
+            const savedNotes = localStorage.getItem('rezz_store_notes') || '';
+            const textarea = document.getElementById('admin-notes');
+            if(textarea) textarea.value = savedNotes;
+        }
+
         function bukaPopup(title, desc) {
             document.getElementById('popup-title').innerText = title;
             document.getElementById('popup-desc').innerHTML = desc;
@@ -896,10 +967,12 @@
             document.getElementById('clock-display').innerHTML = `<i class="fa-regular fa-clock" style="color:var(--accent)"></i> ` + new Date().toLocaleDateString('id-ID', options) + ' WIB';
         }
 
-        // Jalankan program utama
+        // Jalankan seluruh program utama
         hitungUlangStatistik();
         updateTableUI();
         renderLogs();
+        renderAlerts();
+        loadNotes();
         updateClock();
         setInterval(updateClock, 1000);
     </script>
