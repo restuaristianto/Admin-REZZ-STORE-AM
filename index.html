@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin REZZ STORE - Light Premium Panel V4</title>
+    <title>Admin REZZ STORE - Light Premium Panel V4.1</title>
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -105,6 +105,65 @@
             color: var(--accent);
             border-color: rgba(79, 70, 229, 0.15);
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.03);
+        }
+
+        /* TAMPILAN ELEMEN BARU DI BAWAH MENU SIDEBAR */
+        .sidebar-widget {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 40px; /* Memberi jarak proporsional dari menu terakhir */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .widget-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .widget-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+
+        .widget-info h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .widget-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .widget-divider {
+            height: 1px;
+            background: var(--border-color);
+            width: 100%;
+        }
+
+        .widget-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .sidebar-footer {
@@ -562,16 +621,33 @@
     <div class="sidebar">
         <div class="sidebar-brand">REZZ STORE <span>/ AM</span></div>
         <ul class="sidebar-menu">
-            <li class="menu-item active" onclick="changePage('menu-utama', this)">
+            <li class="menu-item" onclick="changePage('menu-utama', this)">
                 <i class="fa-solid fa-chart-pie"></i> Menu Utama
             </li>
             <li class="menu-item" onclick="changePage('tambah-data', this)">
                 <i class="fa-solid fa-square-plus"></i> Tambah Pembelian
             </li>
-            <li class="menu-item" onclick="changePage('data-pembelian', this)">
+            <li class="menu-item active" onclick="changePage('data-pembelian', this)">
                 <i class="fa-solid fa-table-list"></i> Data Pembelian
             </li>
         </ul>
+
+        <!-- ELEMEN BARU DI SINI: MENGISI RUANG KOSONG SIDEBAR -->
+        <div class="sidebar-widget">
+            <div class="widget-profile">
+                <div class="widget-avatar">A</div>
+                <div class="widget-info">
+                    <h4>Admin Panel</h4>
+                    <p>Rezz Store Official</p>
+                </div>
+            </div>
+            <div class="widget-divider"></div>
+            <div class="widget-meta">
+                <span>Versi Sistem</span>
+                <span style="color: var(--accent); background: var(--accent-glow); padding: 2px 8px; border-radius: 6px;">v4.1-Stable</span>
+            </div>
+        </div>
+
         <div class="sidebar-footer"><span class="status-dot"></span> System Storage Active</div>
     </div>
 
@@ -579,7 +655,7 @@
     <div class="main-content">
         
         <!-- MENU UTAMA -->
-        <div id="menu-utama" class="page-content active">
+        <div id="menu-utama" class="page-content">
             <header>
                 <div>
                     <h1>Menu Utama</h1>
@@ -652,7 +728,7 @@
         </div>
 
         <!-- DATA PEMBELIAN -->
-        <div id="data-pembelian" class="page-content">
+        <div id="data-pembelian" class="page-content active">
             <header><div><h1>Data Pembelian Terdaftar</h1><p>Manajemen kuota video serta masa aktif pelanggan secara real-time.</p></div></header>
             
             <div class="controls-bar">
@@ -684,16 +760,13 @@
                 </table>
             </div>
 
-            <!-- SEKSI BARU DI BAWAH TABEL BIAR TIDAK KOSONG -->
             <div class="footer-grid">
                 <!-- Peringatan Kuota Menipis -->
                 <div class="card" style="padding: 25px;">
                     <div class="card-title" style="font-size: 1rem; margin-bottom: 15px; color: var(--warning);">
                         <i class="fa-solid fa-triangle-exclamation"></i> Perlu Perhatian / Kuota Menipis
                     </div>
-                    <div id="alert-container">
-                        <!-- Diisi otomatis oleh JavaScript -->
-                    </div>
+                    <div id="alert-container"></div>
                 </div>
 
                 <!-- Catatan Internal Toko -->
@@ -702,7 +775,7 @@
                         <i class="fa-solid fa-note-sticky"></i> Catatan Internal Admin (Auto-Save)
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <textarea id="admin-notes" rows="4" placeholder="Tulis catatan penting toko di sini.. oninput="saveNotes(this.value)"></textarea>
+                        <textarea id="admin-notes" rows="4" placeholder="Tulis catatan penting toko di sini... (misal: 'Rendy mau ambil paket video minggu depan')" oninput="saveNotes(this.value)"></textarea>
                     </div>
                 </div>
             </div>
@@ -721,7 +794,12 @@
     </div>
 
     <script>
-        let database = JSON.parse(localStorage.getItem('rezz_store_db_v4')) || [];
+        // Data default agar tabel tidak kosong saat pertama dicoba
+        let database = JSON.parse(localStorage.getItem('rezz_store_db_v4')) || [
+            { id: 1, pembeli: 'Bintang', tipe: 'video', harga: 3000, qty: 1, expired: '-' },
+            { id: 2, pembeli: 'Gabut', tipe: 'membership', harga: 5000, qty: 9, expired: '2026-06-28' },
+            { id: 3, pembeli: 'Rehan', tipe: 'video', harga: 19000, qty: 19, expired: '-' }
+        ];
         let logs = JSON.parse(localStorage.getItem('rezz_store_logs_v4')) || [];
         let currentFilter = 'all';
         let searchQuery = '';
@@ -740,7 +818,7 @@
         function tambahLog(pesan, jenis) {
             const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
             logs.unshift({ pesan, waktu, jenis });
-            if (logs.length > 3) logs.pop(); // Batasi 3 riwayat utama biar presisi seimbang
+            if (logs.length > 3) logs.pop();
             localStorage.setItem('rezz_store_logs_v4', JSON.stringify(logs));
             renderLogs();
         }
@@ -924,31 +1002,26 @@
             });
         }
 
-        // FUNGSI BARU: RENDER SISTEM NOTIFIKASI KUOTA MENIPIS
         function renderAlerts() {
             const container = document.getElementById('alert-container');
             if(!container) return;
             
-            // Filter pembeli yang kuotanya <= 2
             let lowStockUsers = database.filter(item => item.qty <= 2);
 
             if(lowStockUsers.length === 0) {
-                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding: 15px 0; text-align:center;">Aman! Semua kuota video pembeli masih mencukupi.</p>`;
+                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding: 15px 0; text-align:center;">Aman! Semua kuota video pembeli masih mencukupi. 👍</p>`;
                 return;
             }
 
             container.innerHTML = lowStockUsers.map(item => `
                 <div class="alert-item">
                     <span class="alert-text">Kuota <b>${item.pembeli}</b> menipis!</span>
-                    <span class="alert-badge">Sisa ${item.qty} Video</span>
+                    <span class="alert-badge" style="background:var(--warning)">Sisa ${item.qty} Video</span>
                 </div>
             `).join('');
         }
 
-        // FUNGSI BARU: MEMO INTERNAL ADMIN
-        function saveNotes(text) {
-            localStorage.setItem('rezz_store_notes', text);
-        }
+        function saveNotes(text) { localStorage.setItem('rezz_store_notes', text); }
         function loadNotes() {
             const savedNotes = localStorage.getItem('rezz_store_notes') || '';
             const textarea = document.getElementById('admin-notes');
@@ -964,10 +1037,10 @@
 
         function updateClock() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            document.getElementById('clock-display').innerHTML = `<i class="fa-regular fa-clock" style="color:var(--accent)"></i> ` + new Date().toLocaleDateString('id-ID', options) + ' WIB';
+            const clockEl = document.getElementById('clock-display');
+            if(clockEl) clockEl.innerHTML = `<i class="fa-regular fa-clock" style="color:var(--accent)"></i> ` + new Date().toLocaleDateString('id-ID', options) + ' WIB';
         }
 
-        // Jalankan seluruh program utama
         hitungUlangStatistik();
         updateTableUI();
         renderLogs();
