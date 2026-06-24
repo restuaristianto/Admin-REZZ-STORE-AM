@@ -694,7 +694,7 @@
             if(!container) return;
             let lowStockUsers = database.filter(item => item.qty <= 2);
             if(lowStockUsers.length === 0) {
-                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding: 15px 0; text-align:center;">Aman! Semua kuota video pembeli aman. 👍</p>`;
+                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding: 15px 0; text-align:center;">Aman! Semua kuota video pembeli aman.</p>`;
                 return;
             }
             container.innerHTML = lowStockUsers.map(item => `
